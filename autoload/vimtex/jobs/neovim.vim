@@ -149,7 +149,13 @@ endfunction
 
 
 function! s:neovim_unix_run(cmd) abort " {{{1
-  call system(['sh', '-c', a:cmd])
+  if a:cmd[-1:-1] == "&"
+    " Run in detached manner
+    let cmd = a:cmd[0:-2]
+    call jobstart(cmd, { "detach": 1 })
+  else
+    call system(['sh', '-c', a:cmd])
+  endif
 endfunction
 
 " }}}1
